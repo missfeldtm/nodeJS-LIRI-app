@@ -1,0 +1,1 @@
+"http://www.omdbapi.com/?s=" + movie + "&y=&plot=short&apikey="+omdb
