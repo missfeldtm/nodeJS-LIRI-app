@@ -16,8 +16,8 @@ var omdb = keys.omdb;
 
 
 
-var userOption = process.argv[2]; 
-var inputParameter = process.argv[3];
+var arg1 = process.argv[2];
+var arg2 = process.argv[3];
 
 var mediaSearch = {
     findSong: function (songStr) {
@@ -152,35 +152,58 @@ var mediaSearch = {
             }
         )
     },
-    doWhatItSays : function(){
-        
+    doWhatItSays: function () {
+        fs.readFile("random.txt", "utf8", function (err, data) {
+            if (err) {
+                console.log(err);
+            }
+
+            //split command and song
+            var dataArr = data.split(",");
+
+            //if dataarr[0] === whichever case, run that function
+
+            mediaSearch.andiamo(dataArr[0],dataArr[1]);
+
+           
+            
+        })
+
+    },
+    andiamo: function (searchHow, searchWhat) {
+        switch (searchHow) {
+            case 'concert-this':
+                mediaSearch.findConcert(searchWhat);
+
+                break;
+            case 'spotify-this-song':
+                mediaSearch.findSong(searchWhat);
+
+                break;
+            case 'movie-this':
+
+                mediaSearch.findMovie(searchWhat);
+                break;
+
+            case 'do-what-it-says':
+                mediaSearch.doWhatItSays();
+
+                break;
+
+        }
+
     }
 
 };
 
+mediaSearch.andiamo(arg1,arg2);
 
 
-switch (userOption) {
-    case 'concert-this':
-        mediaSearch.findConcert(inputParameter);
-
-        break;
-    case 'spotify-this-song':
-            mediaSearch.findSong(inputParameter);
-
-        break;
-    case 'movie-this':
-
-            mediaSearch.findMovie(inputParameter);
-        break;
-
-    case 'do-what-it-says':
 
 
-        break;
 
 
-}
+
 
 
 
