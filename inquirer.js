@@ -1,10 +1,8 @@
 var inquirer = require('inquirer');
 
-
 inquirer
     .prompt([
-        /* Pass your questions in here */
-        //takes in user feedback
+       
         {
             type: "list",
             message: "What would you like to Search?",
@@ -37,3 +35,5 @@ inquirer
         }
 
     });
+
+    
