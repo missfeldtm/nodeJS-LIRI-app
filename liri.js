@@ -1,24 +1,73 @@
-//npm package requirements
 
-var Spotify = require('node-spotify-api');
-var axios = require('axios');
-var colors = require('colors');
-var moment = require('moment');
-var fs = require('fs');
-moment().format();
+var MediaSearch = require("./mediaSearch");
+var fs = require("fs");
+var media = new MediaSearch();
+
+/* media.doSomething = function(){
+    fs.readFile("random.txt", "utf8", function (err, data) {
+        if (err) {
+            console.log(err);
+        }
+
+        //split command and song
+        var dataArr = data.split(",");
+
+        //if dataarr[0] === whichever case, run that function
+        console.log(dataArr);
+        console.log(dataArr[0]);
+        console.log(dataArr[1]);
+
+        letsGo(dataArr[0], dataArr[1])
+    })
+
+} */
+
+//checks for a search parameter
+if(process.argv[2] === 'spotify-this' && !process.argv[3]){
+        process.argv[3] = "water me Lizzo";
+    }else if(process.argv[2] === 'movie-this' && !process.argv[3]){
+        process.argv[3] = "Avengers";
+    }else if(process.argv[2] === 'concert-this' && !process.argv[3]){
+        process.argv[3] = "Cher";
+    }
+    
+
+var searchHow = process.argv[2];
+var searchWhat = process.argv.slice(3).join(' ');
 
 
-//grabs the api keys from keys.js
-var keys = require("./keys.js");
-var spotify = new Spotify(keys.spotify);
-var bandsInTown = keys.bandsInTownKey;
-var omdb = keys.omdb;
+
+function letsGo(arg, str){
+
+    switch (arg) {
+        case 'concert-this':
+            media.findConcert(str);
+
+            break;
+        case 'spotify-this':
+
+            media.findSong(str);
+
+            break;
+        case 'movie-this':
+
+            media.findMovie(str);
+            break;
+
+        case 'do-something':
+            media.doSomething();
+            break;
+        default :
+        console.log("I couldn't complete your request, please try again!");
+
+    }
+}
+
+letsGo(searchHow, searchWhat);
 
 
 
-var arg1 = process.argv[2];
-var arg2 = process.argv[3];
-
+/*
 var mediaSearch = {
     findSong: function (songStr) {
         spotify.search({
@@ -169,37 +218,13 @@ var mediaSearch = {
             
         })
 
-    },
-    andiamo: function (searchHow, searchWhat) {
-        switch (searchHow) {
-            case 'concert-this':
-                mediaSearch.findConcert(searchWhat);
-
-                break;
-            case 'spotify-this-song':
-                mediaSearch.findSong(searchWhat);
-
-                break;
-            case 'movie-this':
-
-                mediaSearch.findMovie(searchWhat);
-                break;
-
-            case 'do-what-it-says':
-                mediaSearch.doWhatItSays();
-
-                break;
-
-        }
-
     }
 
 };
 
-mediaSearch.andiamo(arg1,arg2);
 
 
-
+*/
 
 
 
