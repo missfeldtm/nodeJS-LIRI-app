@@ -11,14 +11,13 @@ var spotify = new Spotify(keys.spotify);
 var bandsInTown = keys.bandsInTownKey;
 var omdb = keys.omdb;
 
-var feedback = 3;
+//shows the amount of results to give back to the user
+var feedback = 1;
 var divider = "\n===================================================\n";
 
 
 var MediaSearch = function () {
     this.findSong = function (searchWhat) {
-        //if the user didn't put a search parameter in, set  default song 
-
 
         spotify.search({
             type: 'track',
@@ -30,7 +29,7 @@ var MediaSearch = function () {
 
             var songs = data.tracks.items;
             var header = "***************************************************\n" + "HERE ARE THE TOP " + feedback + " SONGS FOR: " + searchWhat.toUpperCase() +
-            "\n***************************************************\n"
+                "\n***************************************************\n"
 
 
             console.log(header.rainbow);
@@ -39,9 +38,9 @@ var MediaSearch = function () {
 
 
 
-           for (var i = 0; i < feedback; i++) {
+            for (var i = 0; i < feedback; i++) {
 
-           
+
 
                 var songInfo = [
                     "Song Name: " + songs[i].name,
@@ -53,16 +52,13 @@ var MediaSearch = function () {
                 ]
                 console.log(songInfo.join('\n'));
                 fs.appendFileSync("info.txt", songInfo.join('\n'));
-          
-
-        }
-
+            }
 
         });
 
     };
-    this.findMovie = function (movie) {
-            axios.get("http://www.omdbapi.com/?s=" + movie + "&y=&plot=short&apikey=trilogy").then(
+    this.findMovie = function (searchWhat) {
+            axios.get("http://www.omdbapi.com/?s=" + searchWhat + "&y=&plot=short&apikey=trilogy").then(
 
 
 
@@ -70,15 +66,15 @@ var MediaSearch = function () {
                     //gives position in the omdb search array 
                     var iNum = 0;
 
-                    console.log("***************************************************\n".rainbow + "HERE ARE THE TOP 5 MOVIE SEARCHES FOR: " + movie.toUpperCase().bold +
-                        "\n***************************************************".rainbow);
+                    var header = "***************************************************\n" + "HERE ARE THE TOP " + feedback + " MOVIE(S) FOR: " + searchWhat.toUpperCase() +
+                        "\n***************************************************\n"
 
-                    fs.appendFileSync("info.txt",
 
-                        "***************************************************\n" + "HERE ARE THE TOP 5 MOVIE SEARCHES FOR: " + movie.toUpperCase() +
-                        "\n***************************************************\n")
+                    console.log(header.rainbow);
 
-                    for (var i = 0; i < 5; i++) {
+                    fs.appendFileSync("info.txt", header);
+
+                    for (var i = 0; i < feedback; i++) {
 
                         var searchData = response.data.Search[iNum];
                         var title = searchData.Title;
@@ -86,89 +82,75 @@ var MediaSearch = function () {
                         axios.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy").then(
 
                             function (response) {
-
-                                console.log("Title: " + response.data.Title +
-                                    "\nRelease Year: " + response.data.Year +
-                                    "\nActors: " + response.data.Actors +
-                                    "\nRating: " + response.data.Rated +
-                                    "\nRun Time: " + response.data.Runtime +
-                                    "\n***************************************************");
-
-                                fs.appendFileSync("info.txt", "Title: " + response.data.Title +
-                                    "\nRelease Year: " + response.data.Year +
-                                    "\nActors: " + response.data.Actors +
-                                    "\nRating: " + response.data.Rated +
-                                    "\nRun Time: " + response.data.Runtime +
-                                    "\n***************************************************\n");
+                                var movieData = [
+                                    "Title: " + response.data.Title,
+                                    "\nRelease Year: " + response.data.Year,
+                                    "\nActors: " + response.data.Actors,
+                                    "\nRating: " + response.data.Rated,
+                                    "\nRun Time: " + response.data.Runtime,
+                                    divider
+                                ]
+                                console.log(movieData.join('\n'));
+                                fs.appendFileSync("info.txt", movieData.join('\n'));
                             }
                         )
-
                         iNum++;
-
                     }
 
                 }
 
             )
         },
-        this.findConcert = function (artist) {
+        this.findConcert = function (searchWhat) {
 
-            var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsInTown;
+            var queryUrl = "https://rest.bandsintown.com/artists/" + searchWhat + "/events?app_id=" + bandsInTown;
 
             axios.get(queryUrl).then(
 
                 function (response) {
 
-                    console.log("***************************************************\n".rainbow + "HERE ARE THE LATEST CONCERTS FOR: ".bold + artist.toUpperCase().bold +
-                        "\n***************************************************".rainbow);
+                    var header = "***************************************************\n" + "HERE ARE THE NEXT " + feedback + " CONCERT(S) FOR: " + searchWhat.toUpperCase() +
+                        "\n***************************************************"
 
-                    fs.appendFileSync("info.txt",
+                    //logs the header to the console and the txt file
+                    console.log(header.rainbow);
+                    fs.appendFileSync("info.txt", header);
 
-                        "***************************************************\n" + "HERE ARE THE LATEST CONCERTS FOR: " + artist.toUpperCase() +
-                        "\n***************************************************\n");
-
-                    for (var i = 0; i < 5; i++) {
+                    for (var i = 0; i < feedback; i++) {
                         var body = response.data[i];
 
                         var date = body.datetime;
                         var timeChange = moment(date).format('LLL');
 
-                        console.log("Venue Name : ".bold + body.venue.name +
-                            // * Venue location
-                            "\nVenue Location: ".bold + body.venue.city + "," + body.venue.region + ', ' + body.venue.country +
-                            //  * Date of the Event (use moment to format this as "MM/DD/YYYY")
-                            "\nDate of the Event: ".bold + timeChange +
-                            "\n===================================================".rainbow);
+                        var concertInfo = [
+                            "\nVenue Name : " + body.venue.name,
+                            "\nVenue Location: " + body.venue.city + "," + body.venue.region + ', ' + body.venue.country,
+                            "\nDate of the Event: " + timeChange,
+                            divider
+                        ]
 
-                        fs.appendFileSync("info.txt",
-
-                            "Venue Name : " + body.venue.name +
-                            // * Venue location
-                            "\nVenue Location: " + body.venue.city + "," + body.venue.region + ', ' + body.venue.country +
-                            //  * Date of the Event (use moment to format this as "MM/DD/YYYY")
-                            "\nDate of the Event: " + timeChange +
-                            "\n===================================================\n")
+                        console.log(concertInfo.join('\n'));
+                        fs.appendFileSync("info.txt", concertInfo.join('\n'));
                     }
                 })
         },
         this.doSomething = function () {
-        fs.readFile("random.txt", "utf8", function (err, data) {
-            if (err) {
-                console.log(err);
-            }
+            fs.readFile("random.txt", "utf8", function (err, data) {
+                if (err) {
+                    console.log(err);
+                }
 
-            //split command and song
-            var dataArr = data.split(",");
+                //split command and song
+                var dataArr = data.split(",");
 
-            //if dataarr[0] === whichever case, run that function
-            console.log(dataArr);
-            console.log(dataArr[0]);
-            console.log(dataArr[1]);
+                //if dataarr[0] === whichever case, run that function
+                console.log(dataArr);
+                console.log(dataArr[0]);
+                console.log(dataArr[1]);
 
+            })
 
-        })
-
-    }
+        }
 
 
 };
