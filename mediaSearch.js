@@ -82,16 +82,23 @@ var MediaSearch = function () {
                         axios.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy").then(
 
                             function (response) {
+
                                 var movieData = [
                                     "Title: " + response.data.Title,
                                     "\nRelease Year: " + response.data.Year,
+                                    "\nIMDB Rating: " + response.data.imdbRating,
+                                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value,
+                                    "\nCountry: " + response.data.Country,
+                                    "\nLanguage(s): " + response.data.Language,
                                     "\nActors: " + response.data.Actors,
                                     "\nRating: " + response.data.Rated,
                                     "\nRun Time: " + response.data.Runtime,
                                     divider
                                 ]
-                                console.log(movieData.join('\n'));
+
+                                console.log(movieData.join('\n'))
                                 fs.appendFileSync("info.txt", movieData.join('\n'));
+
                             }
                         )
                         iNum++;
