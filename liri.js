@@ -24,7 +24,7 @@ var media = new MediaSearch();
 
 //checks for a search parameter
 if(process.argv[2] === 'spotify-this' && !process.argv[3]){
-        process.argv[3] = "water me Lizzo";
+        process.argv[3] = "lemonade beyonce";
     }else if(process.argv[2] === 'movie-this' && !process.argv[3]){
         process.argv[3] = "Avengers";
     }else if(process.argv[2] === 'concert-this' && !process.argv[3]){

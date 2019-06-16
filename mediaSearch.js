@@ -58,108 +58,143 @@ var MediaSearch = function () {
 
     };
     this.findMovie = function (searchWhat) {
-            axios.get("http://www.omdbapi.com/?s=" + searchWhat + "&y=&plot=short&apikey=trilogy").then(
+        axios.get("http://www.omdbapi.com/?s=" + searchWhat + "&y=&plot=short&apikey=trilogy").then(
+
+            function (response) {
+                //gives position in the omdb search array 
+                var iNum = 0;
+
+                var header = "***************************************************\n" + "HERE ARE THE TOP " + feedback + " MOVIE(S) FOR: " + searchWhat.toUpperCase() +
+                    "\n***************************************************\n"
 
 
+                console.log(header.rainbow);
 
-                function (response) {
-                    //gives position in the omdb search array 
-                    var iNum = 0;
+                fs.appendFileSync("info.txt", header);
 
-                    var header = "***************************************************\n" + "HERE ARE THE TOP " + feedback + " MOVIE(S) FOR: " + searchWhat.toUpperCase() +
-                        "\n***************************************************\n"
+                for (var i = 0; i < feedback; i++) {
+
+                    var searchData = response.data.Search[iNum];
+                    var title = searchData.Title;
+
+                    axios.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy").then(
+
+                        function (response) {
+
+                            var movieData = [
+                                "Title: " + response.data.Title,
+                                "\nRelease Year: " + response.data.Year,
+                                "\nIMDB Rating: " + response.data.imdbRating,
+                                "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value,
+                                "\nCountry: " + response.data.Country,
+                                "\nLanguage(s): " + response.data.Language,
+                                "\nActors: " + response.data.Actors,
+                                "\nRating: " + response.data.Rated,
+                                "\nRun Time: " + response.data.Runtime,
+                                divider
+                            ]
+
+                            console.log(movieData.join('\n'))
+                            fs.appendFileSync("info.txt", movieData.join('\n'));
+
+                        }
+                    )
+                    iNum++;
+                }
+
+            }
+
+        )
+    };
+    this.findConcert = function (searchWhat) {
+
+        var queryUrl = "https://rest.bandsintown.com/artists/" + searchWhat + "/events?app_id=" + bandsInTown;
+
+        axios.get(queryUrl).then(
+
+            function (response) {
+
+                var header = "***************************************************\n" + "HERE ARE THE NEXT " + feedback + " CONCERT(S) FOR: " + searchWhat.toUpperCase() +
+                    "\n***************************************************"
+
+                //logs the header to the console and the txt file
+                console.log(header.rainbow);
+                fs.appendFileSync("info.txt", header);
+
+               
+            
+                for (var i = 0; i < feedback; i++) {
+
+                    var body = response.data[i];
+                    var date = body.datetime;
+                    var timeChange = moment(date).format('LLL');
 
 
-                    console.log(header.rainbow);
+                    var concertInfo = [
+                        "\nVenue Name : " + body.venue.name,
+                        "\nVenue Location: " + body.venue.city + "," + body.venue.region + ', ' + body.venue.country,
+                        "\nDate of the Event: " + timeChange,
+                        divider
+                    ]
 
-                    fs.appendFileSync("info.txt", header);
-
-                    for (var i = 0; i < feedback; i++) {
-
-                        var searchData = response.data.Search[iNum];
-                        var title = searchData.Title;
-
-                        axios.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy").then(
-
-                            function (response) {
-
-                                var movieData = [
-                                    "Title: " + response.data.Title,
-                                    "\nRelease Year: " + response.data.Year,
-                                    "\nIMDB Rating: " + response.data.imdbRating,
-                                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value,
-                                    "\nCountry: " + response.data.Country,
-                                    "\nLanguage(s): " + response.data.Language,
-                                    "\nActors: " + response.data.Actors,
-                                    "\nRating: " + response.data.Rated,
-                                    "\nRun Time: " + response.data.Runtime,
-                                    divider
-                                ]
-
-                                console.log(movieData.join('\n'))
-                                fs.appendFileSync("info.txt", movieData.join('\n'));
-
-                            }
-                        )
-                        iNum++;
-                    }
+                    console.log(concertInfo.join('\n'));
+                    fs.appendFileSync("info.txt", concertInfo.join('\n'));
 
                 }
 
-            )
-        },
-        this.findConcert = function (searchWhat) {
+            }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+    };
+    this.doSomething = function () {
+        //declaring this at the top of the function so it will run other methods inside of the constructor
 
-            var queryUrl = "https://rest.bandsintown.com/artists/" + searchWhat + "/events?app_id=" + bandsInTown;
+        var self = this;
+        var type;
+        var text;
 
-            axios.get(queryUrl).then(
 
-                function (response) {
+        fs.readFile("random.txt", "utf8", function (err, data) {
+            if (err) {
+                console.log(err);
+            }
 
-                    var header = "***************************************************\n" + "HERE ARE THE NEXT " + feedback + " CONCERT(S) FOR: " + searchWhat.toUpperCase() +
-                        "\n***************************************************"
+            //split command and song
+            var dataArr = data.split(",");
+            console.log(dataArr);
+            text = dataArr[1];
+            type = dataArr[0];
 
-                    //logs the header to the console and the txt file
-                    console.log(header.rainbow);
-                    fs.appendFileSync("info.txt", header);
+            //if dataarr[0] === whichever case, run that function
 
-                    for (var i = 0; i < feedback; i++) {
-                        var body = response.data[i];
+            console.log(text);
+            console.log(type);
+            switch (type) {
 
-                        var date = body.datetime;
-                        var timeChange = moment(date).format('LLL');
+                case 'concert-this':
+                    console.log(text)
+                    self.findConcert(text);
 
-                        var concertInfo = [
-                            "\nVenue Name : " + body.venue.name,
-                            "\nVenue Location: " + body.venue.city + "," + body.venue.region + ', ' + body.venue.country,
-                            "\nDate of the Event: " + timeChange,
-                            divider
-                        ]
+                    break;
+                case 'spotify-this':
+                    self.findSong(dataArr[1]);
 
-                        console.log(concertInfo.join('\n'));
-                        fs.appendFileSync("info.txt", concertInfo.join('\n'));
-                    }
-                })
-        },
-        this.doSomething = function () {
-            fs.readFile("random.txt", "utf8", function (err, data) {
-                if (err) {
-                    console.log(err);
-                }
+                    break;
+                case 'movie-this':
+                    self.findMovie(dataArr[1]);
 
-                //split command and song
-                var dataArr = data.split(",");
+                    break;
+                default:
+                    console.log("I couldn't complete your request, please try again!");
 
-                //if dataarr[0] === whichever case, run that function
-                console.log(dataArr);
-                console.log(dataArr[0]);
-                console.log(dataArr[1]);
+            }
+        });
 
-            })
 
-        }
-
+    };
 
 };
 
 module.exports = MediaSearch;
+
