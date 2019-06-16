@@ -5,6 +5,7 @@ var moment = require('moment');
 var fs = require('fs');
 moment().format();
 
+/**** API KEYS ****/
 //grabs the api keys from keys.js
 var keys = require("./keys.js");
 var spotify = new Spotify(keys.spotify);
@@ -12,6 +13,7 @@ var bandsInTown = keys.bandsInTownKey;
 var omdb = keys.omdb;
 
 //shows the amount of results to give back to the user
+/**** CHANGE YOUR NUMBER OF RESULTS HERE! ****/
 var feedback = 1;
 var divider = "\n===================================================\n";
 
@@ -32,15 +34,11 @@ var MediaSearch = function () {
                 "\n***************************************************\n"
 
 
-            console.log(header.rainbow);
+            console.log(header.cyan);
 
             fs.appendFileSync("info.txt", header);
 
-
-
             for (var i = 0; i < feedback; i++) {
-
-
 
                 var songInfo = [
                     "Song Name: " + songs[i].name,
@@ -68,7 +66,7 @@ var MediaSearch = function () {
                     "\n***************************************************\n"
 
 
-                console.log(header.rainbow);
+                console.log(header.cyan);
 
                 fs.appendFileSync("info.txt", header);
 
@@ -107,8 +105,11 @@ var MediaSearch = function () {
         )
     };
     this.findConcert = function (searchWhat) {
+        console.log(searchWhat);
 
         var queryUrl = "https://rest.bandsintown.com/artists/" + searchWhat + "/events?app_id=" + bandsInTown;
+
+
 
         axios.get(queryUrl).then(
 
@@ -118,11 +119,11 @@ var MediaSearch = function () {
                     "\n***************************************************"
 
                 //logs the header to the console and the txt file
-                console.log(header.rainbow);
+                console.log(header.cyan.bold);
                 fs.appendFileSync("info.txt", header);
 
-               
-            
+
+
                 for (var i = 0; i < feedback; i++) {
 
                     var body = response.data[i];
@@ -161,15 +162,17 @@ var MediaSearch = function () {
             }
 
             //split command and song
-            var dataArr = data.split(",");
+            var dataArr = data.split(", ");
             console.log(dataArr);
-            text = dataArr[1];
+
             type = dataArr[0];
+            text = dataArr[1];
 
             //if dataarr[0] === whichever case, run that function
 
             console.log(text);
             console.log(type);
+
             switch (type) {
 
                 case 'concert-this':
@@ -189,12 +192,11 @@ var MediaSearch = function () {
                     console.log("I couldn't complete your request, please try again!");
 
             }
-        });
 
+        });
 
     };
 
 };
 
 module.exports = MediaSearch;
-
