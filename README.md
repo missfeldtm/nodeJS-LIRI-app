@@ -73,7 +73,7 @@ You should be ready to run this app!! :)
    * This will show the following information about the song in your terminal/bash window
 
    * Example 3: `movie-this`
-     ![IMAGES](images/movie-this.PNG)
+     ![IMAGES](/images/movie-this.png)
 
    This Is executed by running `node liri.js movie-this iron man
 * This will output the following Movie information to your terminal/bash window
