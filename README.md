@@ -59,14 +59,14 @@ You should be ready to run this app!! :)
 
 4. liri.js has 4 different commands:
    * Example 1: `concert-this`
-   ![IMAGES](images/concert-this.PNG)
+   ![IMAGES](/images/concert-this.png)
 
    This Is executed by running `node liri.js concert-this david guetta`
 
    * This will search the Bands in Town Artist Events API (`"https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"`) for an artist and render information about each event to the terminal
 
    * Example 2: `spotify-this`
-      ![IMAGES](images/spotify-this.PNG)
+      ![IMAGES](/images/spotify-this.png)
 
    This Is executed by running `node liri.js spotify-this beyonce`
 
@@ -79,8 +79,8 @@ You should be ready to run this app!! :)
 * This will output the following Movie information to your terminal/bash window
 
    * Example 4: `do-what-it-says`
-        ![IMAGES](images/do-something.PNG)
-        ![IMAGES](images/randomtxt.PNG)
+        ![IMAGES](/images/do-something.png)
+        ![IMAGES](/images/randomtxt.png)
 
    This Is executed by running `node liri.js do-something
    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
@@ -91,7 +91,7 @@ You should be ready to run this app!! :)
 
 ## EXTRAS!!!
 *This app also keeps track of everything you search in an info.txt file so you can keep track of everything you search
-![IMAGES](images/log.PNG)
+![IMAGES](/images/log.png)
 
 
 *You can also keep change the number of results you get for better search efficiency...you can do this by going into the the `mediaSearch.js` file and changing the number inthe feedback variable
@@ -101,5 +101,5 @@ You should be ready to run this app!! :)
 
 *Try running the liri-wInquirer.js where the console propmpts you for your questions :)
 
-![IMAGES](images/inq1.PNG)
-![IMAGES](images/inq2.PNG)
+![IMAGES](/images/inq1.png)
+![IMAGES](/images/inq2.png)
